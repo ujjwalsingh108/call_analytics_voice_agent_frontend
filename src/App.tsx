@@ -3,7 +3,6 @@ import Header from "./components/Header";
 import EmailModal from "./components/EmailModal";
 import { ToastProvider, showToast } from "./components/ToastProvider";
 
-// Lazy load chart components to reduce initial bundle size
 const CallDurationChart = lazy(() => import("./components/CallDurationChart"));
 const SadPathChart = lazy(() => import("./components/SadPathChart"));
 
@@ -17,7 +16,6 @@ function App() {
       setChartToEdit(chartType);
       setIsEmailModalOpen(true);
     } else {
-      // Handle chart editing logic here
       console.log(`Editing ${chartType} chart for user ${userEmail}`);
     }
   };
@@ -25,14 +23,12 @@ function App() {
   const handleEmailSubmit = (email: string) => {
     setUserEmail(email);
     setIsEmailModalOpen(false);
-    // Show success toast
     showToast(
       "success",
       "Email saved!",
       `You can now customize charts and your data will be saved for ${email}`
     );
 
-    // Now proceed with editing the chart
     if (chartToEdit) {
       console.log(`Editing ${chartToEdit} chart for user ${email}`);
       setChartToEdit(null);
