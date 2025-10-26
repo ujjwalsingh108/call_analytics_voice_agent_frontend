@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import Header from "./components/Header";
-import CallDurationChart from "./components/CallDurationChart";
-import SadPathChart from "./components/SadPathChart";
 import EmailModal from "./components/EmailModal";
 import { ToastProvider, showToast } from "./components/ToastProvider";
+
+// Lazy load chart components to reduce initial bundle size
+const CallDurationChart = lazy(() => import("./components/CallDurationChart"));
+const SadPathChart = lazy(() => import("./components/SadPathChart"));
 
 function App() {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -55,14 +57,32 @@ function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <CallDurationChart
-                onEdit={() => handleEditChart("duration")}
-                userEmail={userEmail}
-              />
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center h-64">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-2 text-gray-600">Loading chart...</span>
+                  </div>
+                }
+              >
+                <CallDurationChart
+                  onEdit={() => handleEditChart("duration")}
+                  userEmail={userEmail}
+                />
+              </Suspense>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <SadPathChart onEdit={() => handleEditChart("sadpath")} />
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center h-64">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-2 text-gray-600">Loading chart...</span>
+                  </div>
+                }
+              >
+                <SadPathChart onEdit={() => handleEditChart("sadpath")} />
+              </Suspense>
             </div>
           </div>
 
